@@ -16,8 +16,6 @@ To run this on your own system, you don't need the API key. I have cached every 
 ## Tutorial
 First, Download the .zip file and unload it into a folder.
 
-Assuming you have support for node.js and yarn installed
-
 Now, to run the server run: 
 
 `node server/server.js`
