@@ -1,5 +1,5 @@
 # ZipCodeAnalyzer
-This tool allows the user to view data on various zipcodes. The data provided is from the Realty Mole API here: https://rapidapi.com/realtymole/api/realty-mole-property-api
+This vite + react project allows the user to view data on various zipcodes. The data provided is from the Realty Mole API here: https://rapidapi.com/realtymole/api/realty-mole-property-api
 
 Chart.js is also used linked here: https://github.com/chartjs/
 
