@@ -18,14 +18,23 @@ First, Download the .zip file and unload it into a folder.
 
 Now, to run the server run: 
 
-node server/server.js
-
+`node server/server.js`
 
 
 and on a separate terminal window run:
 
-yarn run dev
+`yarn run dev`
 
 Once up and Running you may go to the localhost address provided to play around. 
 
-NOTE: If you do not have the API Key for this project, use zipcodes in the market_data_db such as 10012, or 90210. Also, this is still version one so it has some bugs and a lack of error handling. I do plan on adding some more features, like a map markup of the zipcode entered, some more analysis on the data, etc. I also may view some other APIs that can possibly fit my needs better.
+NOTE: If you do not have the API Key for this project, use zipcodes in the market_data_db such as 10012, or 90210. 
+## Future Plans
+
+Also, this is still version one so it has some bugs and a lack of error handling. 
+
+I plan on adding some more features such as:
+* More error handling
+* Bug fixes
+* Possibly support for a new API with more data
+* Some customization on the user interface to select what they want
+* Analysis and scoring of the zipcode rents to show growth, a buy rating, etc.
