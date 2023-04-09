@@ -46,8 +46,13 @@ const App: React.FC = () => {
       TwoBed: [],
       ThreeBed: [],
     };
-  
-    Object.keys(data.rentalData.history).forEach((k) => {
+    const sortedKeys = Object.keys(data.rentalData.history).sort((a, b) => {
+      const dateA = new Date(a);
+      const dateB = new Date(b);
+      return dateA.getTime() - dateB.getTime();
+    });
+
+    sortedKeys.forEach((k) => {
       const history = data.rentalData.history[k];
   
       const createRentalData = (bedroomType: number) => {
