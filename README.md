@@ -7,6 +7,8 @@ To run this on your own system, you don't need the API key. I have cached every 
 
 <img width="648" alt="Screenshot 2023-04-09 at 12 16 26 AM" src="https://user-images.githubusercontent.com/67870706/230754127-3dd845ca-3d84-4322-962d-ea3bf688d753.png">
 
+Notice the spike in the summer of 2022 followed by a steady decline short after
+
 
 
 ## Tutorial
