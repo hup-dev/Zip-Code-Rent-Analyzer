@@ -3,7 +3,7 @@ This vite + react project allows the user to view data on various zipcodes. The 
 
 Chart.js is also used linked here: https://github.com/chartjs/
 
-To run this on your own system, you don't need the API key. I have cached every entry I've done into market_data.db so that it can be used again without an API call.
+To run this on your own system, you don't need the API key. I have cached every entry I've done into market_data.db, a database with sqlite3, so that it can be used again without an API call.
 
 ## In Action
 
@@ -15,6 +15,8 @@ To run this on your own system, you don't need the API key. I have cached every 
 
 ## Tutorial
 First, Download the .zip file and unload it into a folder.
+
+Install packages: npm install
 
 Now, to run the server run: 
 
