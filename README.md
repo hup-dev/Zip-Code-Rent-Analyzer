@@ -1,4 +1,4 @@
-# ZipCodeAnalyzer
+# Zip Code Rent Analyzer
 This vite + react project allows the user to view data on various zipcodes. The data provided is from the Realty Mole API here: https://rapidapi.com/realtymole/api/realty-mole-property-api
 
 Chart.js is also used linked here: https://github.com/chartjs/
@@ -28,4 +28,4 @@ yarn run dev
 
 Once up and Running you may go to the localhost address provided to play around. 
 
-NOTE: If you do not have the API Key for this project, use zipcodes in the market_data_db such as 10012, or 90210. Also, this is still version one so it has some bugs and a lack of error handling
+NOTE: If you do not have the API Key for this project, use zipcodes in the market_data_db such as 10012, or 90210. Also, this is still version one so it has some bugs and a lack of error handling. I do plan on adding some more features, like a map markup of the zipcode entered, some more analysis on the data, etc. I also may view some other APIs that can possibly fit my needs better.
