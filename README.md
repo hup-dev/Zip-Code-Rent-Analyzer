@@ -5,7 +5,7 @@ To run this on your own system, you don't need the API key. I have cached every 
 
 ## In Action
 
-<img width="819" alt="Screenshot 2023-04-09 at 12 10 23 AM" src="https://user-images.githubusercontent.com/67870706/230753920-d89cf967-4a98-4ef1-8ee6-ed55252419c8.png">
+<img width="648" alt="Screenshot 2023-04-09 at 12 16 26 AM" src="https://user-images.githubusercontent.com/67870706/230754127-3dd845ca-3d84-4322-962d-ea3bf688d753.png">
 
 Note: This is still version one so it has some bugs and a lack of error handling
 
