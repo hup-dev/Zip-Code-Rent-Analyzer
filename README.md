@@ -16,7 +16,9 @@ To run this on your own system, you don't need the API key. I have cached every 
 ## Tutorial
 First, Download the .zip file and unload it into a folder.
 
-Install packages: npm install
+Install packages: 
+
+`npm install`
 
 Now, to run the server run: 
 
