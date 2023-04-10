@@ -16,7 +16,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-  }, [submittedZipcode,theme]);
+  }, [submittedZipcode]);
   useEffect(() => {
     document.body.className = theme;
   }, [theme]);
