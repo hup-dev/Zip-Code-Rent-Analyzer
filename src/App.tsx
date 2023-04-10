@@ -12,36 +12,44 @@ const App: React.FC = () => {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!submittedZipcode) {
-        return;
-      }
-
-      try {
-        const response = await fetch(`http://localhost:3030/market-data/${submittedZipcode}`);
-        const result = await response.json();
-
-        setData(result);
-        setError(false);
-        setErrorMessage('');
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError(true);
-        setErrorMessage('Error fetching data. Please try again.');
-      }
-    };
-
     fetchData();
-  }, [submittedZipcode]);
-
+  }, [submittedZipcode,theme]);
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
   interface RentalDataObject {
     name: string;
     AverageRent: number;
     TotalRentals: number;
   }
+  const fetchData = async () => {
+    if (!submittedZipcode) {
+      return;
+    }
 
+    try {
+      const response = await fetch(`http://localhost:3030/market-data/${submittedZipcode}`);
+      const result = await response.json();
+
+      setData(result);
+      setError(false);
+      setErrorMessage('');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError(true);
+      setErrorMessage('Error fetching data. Please try again.');
+    }
+  };
+const toggleTheme = () => {
+  if (theme === 'light') {
+    setTheme('dark');
+  } else {
+    setTheme('light');
+  }
+};
   const renderCharts = (data: any) => {
     if (!data) {
       return null;
@@ -127,6 +135,7 @@ const App: React.FC = () => {
             Submit
           </button>
         </form>
+        <button onClick={toggleTheme} className = "toggle-theme">Toggle Theme</button>
         {error && <p className="error">{errorMessage}</p>}
         {chartData && (
           <>
