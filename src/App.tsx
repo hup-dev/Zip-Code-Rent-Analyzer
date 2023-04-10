@@ -10,6 +10,8 @@ const App: React.FC = () => {
   const [zipcode, setZipcode] = useState('');
   const [submittedZipcode, setSubmittedZipcode] = useState('');
   const [data, setData] = useState<any>(null);
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,8 +24,12 @@ const App: React.FC = () => {
         const result = await response.json();
 
         setData(result);
+        setError(false);
+        setErrorMessage('');
       } catch (error) {
         console.error('Error fetching data:', error);
+        setError(true);
+        setErrorMessage('Error fetching data. Please try again.');
       }
     };
 
@@ -74,10 +80,34 @@ const App: React.FC = () => {
       
   const chartData = useMemo(() => renderCharts(data), [data]);;
 
-  const handleZipcodeSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleZipcodeSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmittedZipcode(zipcode);
+    if (!zipcode) {
+      setError(true);
+      setErrorMessage('Please enter a zipcode');
+      return;
+    }
+    if (!/^\d{5}$/.test(zipcode)) {
+      setError(true);
+      setErrorMessage('Please enter a valid 5-digit zipcode');
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:3030/market-data/${zipcode}`);
+      const result = await response.json();
+      setZipcode(''); // clear the text box
+      setData(result);
+      setSubmittedZipcode(zipcode);
+      setError(false);
+      setErrorMessage('');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError(true);
+      setErrorMessage('Error fetching data. Please try again with a valid zip code.');
+    }
   };
+
+
 
   return (
     <div className="App">
@@ -86,34 +116,33 @@ const App: React.FC = () => {
           <img src={myLogo} className="logo" alt="my logo" />
         </a>
         <form onSubmit={handleZipcodeSubmit} className="zipcode-form">
-        <input
-          type="text"
-          placeholder="Enter zipcode"
-          value={zipcode} // <-- make sure this is bound to the zipcode state variable
-          onChange={(e) => setZipcode(e.target.value)}
-          className="zipcode-input"
-        />
+          <input
+            type="text"
+            placeholder="Enter zipcode"
+            value={zipcode}
+            onChange={(e) => setZipcode(e.target.value)}
+            className="zipcode-input"
+          />
           <button type="submit" className="submit-button">
             Submit
           </button>
         </form>
+        {error && <p className="error">{errorMessage}</p>}
         {chartData && (
           <>
-            <h3>One Bedroom Average and Total Rentals</h3>
+            <h3>One Bedroom Average and Total Rentals in {submittedZipcode}</h3>
             <LineChart chartId="oneBedAverage" data={chartData.OneBed} />
             <LineChartRentals chartId="oneBedRentals" data={chartData.OneBed} />
-            <h3>Two Bedroom Average and Total Rentals</h3>
+            <h3>Two Bedroom Average and Total Rentals in {submittedZipcode}</h3>
             <LineChart chartId="twoBedAverage" data={chartData.TwoBed} />
             <LineChartRentals chartId="twoBedRentals" data={chartData.TwoBed} />
-            <h3>Three Bedroom Average and Total Rentals</h3>
+            <h3>Three Bedroom Average and Total Rentals in {submittedZipcode}</h3>
             <LineChart chartId="threeBedAverage" data={chartData.ThreeBed} />
             <LineChartRentals chartId="threeBedRentals" data={chartData.ThreeBed} />
-    
           </>
         )}
       </header>
     </div>
   );
 };
-
 export default App;
