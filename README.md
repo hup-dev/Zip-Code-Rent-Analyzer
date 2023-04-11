@@ -41,7 +41,6 @@ Once up and Running you may go to the localhost address provided to play around.
 NOTE: If you do not have the API Key for this project, use zipcodes in the market_data_db such as 10012, or 90210. 
 ## Future Plans
 
-Also, this is still version one so it has some bugs and a lack of error handling. 
 
 I plan on adding some more features such as:
 * Valid zipcodes with no rent data currently crash the app
