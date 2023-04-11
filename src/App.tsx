@@ -3,6 +3,9 @@ import './App.css';
 import myLogo from './assets/HS.svg'
 import LineChart from './LineChart';
 import LineChartRentals from './LineChartTotalRentals';
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+
 
 
 
@@ -12,7 +15,9 @@ const App: React.FC = () => {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState('dark');
+  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+
 
   useEffect(() => {
     fetchData();
@@ -25,6 +30,21 @@ const App: React.FC = () => {
     AverageRent: number;
     TotalRentals: number;
   }
+  const fetchCoordinates = async () => {
+    if (!submittedZipcode) {
+      return;
+    }
+  
+    try {
+      const response = await fetch(`http://localhost:3030/coordinates/${submittedZipcode}`);
+      const result = await response.json();
+  
+      setCoordinates(result);
+    } catch (error) {
+      console.error('Error fetching coordinates:', error);
+    }
+  };
+
   const fetchData = async () => {
     if (!submittedZipcode) {
       return;
@@ -42,6 +62,7 @@ const App: React.FC = () => {
       setError(true);
       setErrorMessage('Error fetching data. Please try again.');
     }
+    fetchCoordinates();
   };
 const toggleTheme = () => {
   if (theme === 'light') {
@@ -137,6 +158,22 @@ const toggleTheme = () => {
         </form>
         <button onClick={toggleTheme} className = "toggle-theme">Toggle Theme</button>
         {error && <p className="error">{errorMessage}</p>}
+        {coordinates && (
+            <MapContainer
+            key = {'${coordinates.lat}, ${coordinates.lng}'}
+            center={[coordinates.lat, coordinates.lng]}
+            zoom={13}
+            style={{ height: '400px', width: '100%' }}
+          >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              />
+              <Marker position={[coordinates.lat, coordinates.lng]}>
+                <Popup>{submittedZipcode}</Popup>
+              </Marker>
+            </MapContainer>
+          )}
         {chartData && (
           <>
             <h3>One Bedroom Average and Total Rentals in {submittedZipcode}</h3>
