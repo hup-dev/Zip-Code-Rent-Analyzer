@@ -18,9 +18,9 @@ const App: React.FC = () => {
   const [theme, setTheme] = useState('dark');
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
 
-
   useEffect(() => {
     fetchData();
+    fetchCoordinates();
   }, [submittedZipcode]);
   useEffect(() => {
     document.body.className = theme;
@@ -62,7 +62,6 @@ const App: React.FC = () => {
       setError(true);
       setErrorMessage('Error fetching data. Please try again.');
     }
-    fetchCoordinates();
   };
 const toggleTheme = () => {
   if (theme === 'light') {
@@ -107,7 +106,7 @@ const toggleTheme = () => {
     return rentalData;
   };
       
-  const chartData = useMemo(() => renderCharts(data), [data]);;
+  const chartData = useMemo(() => renderCharts(data), [data]);
 
   const handleZipcodeSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
