@@ -160,7 +160,7 @@ const toggleTheme = () => {
         {error && <p className="error">{errorMessage}</p>}
         {coordinates && (
             <MapContainer
-            key = {'${coordinates.lat}, ${coordinates.lng}'}
+            key={`${coordinates.lat},${coordinates.lng}`}
             center={[coordinates.lat, coordinates.lng]}
             zoom={13}
             style={{ height: '400px', width: '100%' }}
