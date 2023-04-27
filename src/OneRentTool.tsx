@@ -84,7 +84,16 @@ interface OneRentToolProps {
       const history = data.rentalData.history[k];
   
       const createRentalData = (bedroomType: number) => {
-        const { averageRent, totalRentals } = history.detailed[bedroomType];
+        const bedroomData = history.detailed[bedroomType];
+        if (!bedroomData) {
+          return {
+            name: k,
+            AverageRent: 0,
+            TotalRentals: 0,
+          };
+        }
+      
+        const { averageRent, totalRentals } = bedroomData;
         return {
           name: k,
           AverageRent: averageRent,

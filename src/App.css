@@ -92,6 +92,9 @@
   margin-left: 0.5rem;
   margin-top: 15px;
 }
+.one-rent-button:hover {
+  background-color: #0069d9;
+}
 .one-rent-container{
   display: flex;
   flex-direction: column;
