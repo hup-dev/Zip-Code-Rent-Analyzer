@@ -8,23 +8,23 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { BrowserRouter as Router, Route, Routes,NavLink } from 'react-router-dom';
 
 
-
-const OneRentTool: React.FC = () => {
+interface OneRentToolProps {
+    theme: string;
+  }
+  
+  const OneRentTool: React.FC<OneRentToolProps> = ({ theme }) => {
   const [zipcode, setZipcode] = useState('');
   const [submittedZipcode, setSubmittedZipcode] = useState('');
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [theme, setTheme] = useState('dark');
+
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     fetchData();
     fetchCoordinates();
   }, [submittedZipcode]);
-  useEffect(() => {
-    document.body.className = theme;
-  }, [theme]);
   interface RentalDataObject {
     name: string;
     AverageRent: number;
@@ -63,13 +63,7 @@ const OneRentTool: React.FC = () => {
       setErrorMessage('Error fetching data. Please try again.');
     }
   };
-const toggleTheme = () => {
-  if (theme === 'light') {
-    setTheme('dark');
-  } else {
-    setTheme('light');
-  }
-};
+
   const renderCharts = (data: any) => {
     if (!data) {
       return null;
@@ -155,7 +149,6 @@ const toggleTheme = () => {
             Submit
           </button>
         </form>
-        <button onClick={toggleTheme} className = "toggle-theme">Toggle Theme</button>
         {error && <p className="error">{errorMessage}</p>}
         {coordinates && (
             <MapContainer
@@ -176,14 +169,14 @@ const toggleTheme = () => {
         {chartData && (
           <>
             <h3>One Bedroom Average and Total Rentals in {submittedZipcode}</h3>
-            <LineChart chartId="oneBedAverage" data={chartData.OneBed} />
-            <LineChartRentals chartId="oneBedRentals" data={chartData.OneBed} />
+            <LineChart chartId="oneBedAverage" data={chartData.OneBed} theme={theme} />
+            <LineChartRentals chartId="oneBedRentals" data={chartData.OneBed} theme={theme} />
             <h3>Two Bedroom Average and Total Rentals in {submittedZipcode}</h3>
-            <LineChart chartId="twoBedAverage" data={chartData.TwoBed} />
-            <LineChartRentals chartId="twoBedRentals" data={chartData.TwoBed} />
+            <LineChart chartId="twoBedAverage" data={chartData.TwoBed} theme={theme} />
+            <LineChartRentals chartId="twoBedRentals" data={chartData.TwoBed} theme={theme} />
             <h3>Three Bedroom Average and Total Rentals in {submittedZipcode}</h3>
-            <LineChart chartId="threeBedAverage" data={chartData.ThreeBed} />
-            <LineChartRentals chartId="threeBedRentals" data={chartData.ThreeBed} />
+            <LineChart chartId="threeBedAverage" data={chartData.ThreeBed} theme={theme}/>
+            <LineChartRentals chartId="threeBedRentals" data={chartData.ThreeBed} theme={theme} />
           </>
         )}
       </header>

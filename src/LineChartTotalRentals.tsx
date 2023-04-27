@@ -4,9 +4,10 @@ import Chart from 'chart.js/auto';
 interface LineChartProps {
   data?: { name: string; AverageRent: number; TotalRentals: number; }[] | null;
   chartId: string;
+  theme: string;
 }
 
-const LineChart: React.FC<LineChartProps> = ({ chartId, data }) => {
+const LineChart: React.FC<LineChartProps> = ({ chartId, data, theme }) => {
   useEffect(() => {
     if (!data) {
       return;
@@ -24,14 +25,14 @@ const LineChart: React.FC<LineChartProps> = ({ chartId, data }) => {
         labels: data.map((entry) => entry.name),
         datasets: [
           {
-            yAxisID: 'y1',
+            yAxisID: 'average-rent',
             label: 'Average Rent',
             data: data.map((entry) => entry.AverageRent),
-            borderColor: 'rgba(75, 192, 192, 1)',
+            borderColor: 'rgba(0, 255, 255, 1)',
             tension: 0.1,
           },
           {
-            yAxisID: 'y2',
+            yAxisID: 'total-rentals',
             label: 'Total Rentals',
             data: data.map((entry) => entry.TotalRentals),
             borderColor: 'rgba(255, 0, 0, 1)',
@@ -46,23 +47,52 @@ const LineChart: React.FC<LineChartProps> = ({ chartId, data }) => {
             title: {
               display: true,
               text: 'Month',
+              color: theme === 'light' ? 'black' : 'white',
+            },
+            ticks: {
+              color: theme === 'light' ? 'black' : 'white',
             },
           },
-          y1: {
+          'average-rent': {
             position: 'left',
             title: {
               display: true,
               text: 'Average Rent',
+              color: theme === 'light' ? 'black' : 'white',
+            },
+            ticks: {
+              color: theme === 'light' ? 'black' : 'white',
             },
           },
-          y2: {
+          'total-rentals': {
             position: 'right',
             title: {
               display: true,
               text: 'Total Rentals',
+              color: theme === 'light' ? 'black' : 'white',
+            },
+            ticks: {
+              color: theme === 'light' ? 'black' : 'white',
             },
             grid: {
               drawOnChartArea: false,
+              color: theme === 'light' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)', // Adjust the alpha value (0.1) to make it lighter or darker
+            },
+          },
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              afterLabel: (context) => {
+                const dataIndex = context.dataIndex;
+                const totalRentals = data[dataIndex].TotalRentals;
+                return `Total Rentals: ${totalRentals}`;
+              },
+            },
+          },
+          legend: {
+            labels: {
+              color: theme === 'light' ? 'black' : 'white',
             },
           },
         },
@@ -72,9 +102,9 @@ const LineChart: React.FC<LineChartProps> = ({ chartId, data }) => {
     return () => {
       chart.destroy();
     };
-  }, [data]);
+  }, [data, theme]);
 
-  return <canvas id={chartId} width = "800" height = "400"></canvas>;
+  return <canvas id={chartId} width="800" height="400"></canvas>;
 };
 
 export default LineChart;

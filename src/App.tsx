@@ -4,13 +4,15 @@ import { BrowserRouter as Router, Route, Routes,NavLink } from 'react-router-dom
 import OneRentTool from './OneRentTool';
 import HomePage from './HomePage';
 import { useState, useEffect} from 'react';
+import LinkedIn from './assets/LinkedIn.svg'
+import LinkedInLight from './assets/LinkedInLight.svg'
 
 
 
 const App: React.FC = () => {
 
 
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     document.body.className = theme;
@@ -33,12 +35,17 @@ const App: React.FC = () => {
       </button>
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage theme = {theme} />} />
-          <Route path="/one-rent-tool" element={<OneRentTool />} />
+          <Route path="/" element={<HomePage  />} />
+          <Route path="/one-rent-tool" element={<OneRentTool theme={theme} />} />
           {/* Comment out the TwoRentTool Route until you create the component
           <Route path="/two-rent-tool" element={<Your TwoRentTool component />} /> */}
         </Routes>
       </Router>
+      <div className="linked-logo-container">
+        <a href="https://www.linkedin.com/in/samuel-huppert/" target = "_blank" rel="noopener noreferrer">
+        <img src={theme === 'light' ? LinkedInLight : LinkedIn} className="linkedlogo" alt="my logo" />
+        </a>
+        </div>
     </div>
   );
   };

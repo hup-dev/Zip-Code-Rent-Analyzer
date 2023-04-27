@@ -4,9 +4,10 @@ import Chart from 'chart.js/auto';
 interface LineChartProps {
   data?: { name: string; AverageRent: number; TotalRentals: number; }[] | null;
   chartId: string;
+  theme: string;
 }
 
-const LineChart: React.FC<LineChartProps> = ({chartId, data }) => {
+const LineChart: React.FC<LineChartProps> = ({chartId, data,theme}) => {
   useEffect(() => {
     if (!data) {
       return;
@@ -26,7 +27,7 @@ const LineChart: React.FC<LineChartProps> = ({chartId, data }) => {
           {
             label: 'Average Rent',
             data: data.map((entry) => entry.AverageRent),
-            borderColor: 'rgba(75, 192, 192, 1)',
+            borderColor: 'rgba(0, 255, 255, 1)',
             tension: 0.1,
           },
           
@@ -39,15 +40,24 @@ const LineChart: React.FC<LineChartProps> = ({chartId, data }) => {
             title: {
               display: true,
               text: 'Month',
+              color: theme === 'light' ? 'black' : 'white',
+            },
+            ticks: {
+              color: theme === 'light' ? 'black' : 'white',
             },
           },
           y: {
             title: {
               display: true,
               text: 'Average Rent',
+              color: theme === 'light' ? 'black' : 'white',
+            },
+            ticks: {
+              color: theme === 'light' ? 'black' : 'white',
             },
           },
-
+          
+          
         },
         plugins: {
           tooltip: {
@@ -58,6 +68,12 @@ const LineChart: React.FC<LineChartProps> = ({chartId, data }) => {
                 return `Total Rentals: ${totalRentals}`;
               },
             },
+            
+          },
+          legend: {
+            labels: {
+              color: theme === 'light' ? 'black' : 'white',
+            },
           },
         },
       },
@@ -66,7 +82,7 @@ const LineChart: React.FC<LineChartProps> = ({chartId, data }) => {
     return () => {
       chart.destroy();
     };
-  }, [data]);
+  }, [data,theme]);
 
   return <canvas id={chartId} width = "800" height = "400"></canvas>;
 };
