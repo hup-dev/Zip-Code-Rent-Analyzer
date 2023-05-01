@@ -28,7 +28,7 @@ const LineChart: React.FC<LineChartProps> = ({ chartId, data, theme }) => {
             yAxisID: 'average-rent',
             label: 'Average Rent',
             data: data.map((entry) => entry.AverageRent),
-            borderColor: 'rgba(0, 255, 255, 1)',
+            borderColor: 'rgba(0, 25, 255, 1)',
             tension: 0.1,
           },
           {
