@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { BrowserRouter as Router, Route, Routes,NavLink } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
+import { createTheme } from 'react-data-table-component';
 
 interface OneRentToolProps {
     theme: string;
@@ -108,6 +109,7 @@ interface OneRentToolProps {
     return mortgageArray;
   };
   
+  
   const parseRentData = (data: any) => {
     if (!data) {
       return null;
@@ -195,7 +197,27 @@ interface OneRentToolProps {
     }
   };
 
-
+  createTheme('solarized', {
+    text: {
+      primary: '#268bd2',
+      secondary: '#2aa198',
+    },
+    background: {
+      default: '#002b36',
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#073642',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  }, 'dark');
 
   return (
     <div className="App">
@@ -219,12 +241,14 @@ interface OneRentToolProps {
       <>
 
  
-        <DataTable
+        <DataTable 
+          className="dataTable"
           title="Mortgage Data"
           columns={columns}
           data={mortgageData}
           highlightOnHover
           responsive
+          theme="solarized"
             />
           </>
         )}
