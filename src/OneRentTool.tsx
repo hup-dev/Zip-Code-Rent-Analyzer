@@ -20,7 +20,6 @@ interface OneRentToolProps {
   const[fdata, setFdata] = useState<any>(null);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
@@ -28,6 +27,28 @@ interface OneRentToolProps {
     fetchfData();
     fetchCoordinates();
   }, [submittedZipcode]);
+  createTheme('solarized', {
+    text: {
+      primary: 'black',
+      secondary: '#2aa198',
+    },
+    background: {
+      default: '#868686;',
+    },
+    context: {
+      background: '#cb4b19',
+      text: '#FFFFFF',
+    },
+    divider: {
+      default: '#073642',
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)',
+    },
+  }, 'dark');
+
   interface RentalDataObject {
     name: string;
     AverageRent: number;
@@ -99,6 +120,8 @@ interface OneRentToolProps {
   
     Object.entries(fdata.rates).forEach(([key, value]) => {
       if (key !== 'meta') { // Add this condition to filter out the 'meta' field
+        // change underscores to spaces
+        key = key.replace(/_/g, ' ');
         mortgageArray.push({
           Type: key,
           rate: Number(value),
@@ -197,27 +220,7 @@ interface OneRentToolProps {
     }
   };
 
-  createTheme('solarized', {
-    text: {
-      primary: '#268bd2',
-      secondary: '#2aa198',
-    },
-    background: {
-      default: '#002b36',
-    },
-    context: {
-      background: '#cb4b16',
-      text: '#FFFFFF',
-    },
-    divider: {
-      default: '#073642',
-    },
-    action: {
-      button: 'rgba(0,0,0,.54)',
-      hover: 'rgba(0,0,0,.08)',
-      disabled: 'rgba(0,0,0,.12)',
-    },
-  }, 'dark');
+ 
 
   return (
     <div className="App">

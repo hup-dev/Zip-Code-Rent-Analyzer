@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes,NavLink } from 'react-router-dom';
 import OneRentTool from './OneRentTool';
+import TwoRentTool from './TwoRentTool';
 import HomePage from './HomePage';
 import { useState, useEffect} from 'react';
 import LinkedIn from './assets/LinkedIn.svg'
@@ -37,8 +38,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<HomePage  />} />
           <Route path="/one-rent-tool" element={<OneRentTool theme={theme} />} />
-          {/* Comment out the TwoRentTool Route until you create the component
-          <Route path="/two-rent-tool" element={<Your TwoRentTool component />} /> */}
+          <Route path="/two-rent-tool" element={<TwoRentTool theme= {theme} />} />
         </Routes>
       </Router>
       <div className="linked-logo-container">

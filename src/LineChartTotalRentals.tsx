@@ -86,7 +86,6 @@ const LineChart: React.FC<LineChartProps> = ({ chartId, data, theme }) => {
               afterLabel: (context) => {
                 const dataIndex = context.dataIndex;
                 const totalRentals = data[dataIndex].TotalRentals;
-                return `Total Rentals: ${totalRentals}`;
               },
             },
           },

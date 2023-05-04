@@ -17,6 +17,9 @@ const HomePage:React.FC = () => {
             <NavLink to="/one-rent-tool">
                 <button className="one-rent-button">One Rent Tool</button>
             </NavLink>
+            <NavLink to="/two-rent-tool">
+                <button className="two-rent-button">Two Rent Tool</button>
+            </NavLink>
         </div>
         </header>
         </div>
