@@ -237,21 +237,6 @@ interface OneRentToolProps {
             Submit
           </button>
         </form>
-        {mortgageData && (
-      <>
-
- 
-        <DataTable 
-          className="dataTable"
-          title="Mortgage Data"
-          columns={columns}
-          data={mortgageData}
-          highlightOnHover
-          responsive
-          theme="solarized"
-            />
-          </>
-        )}
         {error && <p className="error">{errorMessage}</p>}
         {coordinates && (
             <MapContainer
@@ -280,6 +265,21 @@ interface OneRentToolProps {
             <h3>Three Bedroom Average and Total Rentals in {submittedZipcode}</h3>
             <LineChart chartId="threeBedAverage" data={chartData.ThreeBed} theme={theme}/>
             <LineChartRentals chartId="threeBedRentals" data={chartData.ThreeBed} theme={theme} />
+          </>
+        )}
+           {mortgageData && (
+      <>
+
+ 
+        <DataTable 
+          className="dataTable"
+          title="Mortgage Data"
+          columns={columns}
+          data={mortgageData}
+          highlightOnHover
+          responsive
+          theme="solarized"
+            />
           </>
         )}
       </header>
