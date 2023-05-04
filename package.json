@@ -23,11 +23,13 @@
     "openai": "^3.2.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
+    "react-data-table-component": "^7.5.3",
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.10.0",
     "recharts": "^2.5.0",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "styled-components": "^5.3.10"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

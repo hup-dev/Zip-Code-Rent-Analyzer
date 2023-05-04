@@ -6,7 +6,7 @@ import LineChartRentals from './LineChartTotalRentals';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { BrowserRouter as Router, Route, Routes,NavLink } from 'react-router-dom';
-
+import DataTable from 'react-data-table-component';
 
 interface OneRentToolProps {
     theme: string;
@@ -16,13 +16,15 @@ interface OneRentToolProps {
   const [zipcode, setZipcode] = useState('');
   const [submittedZipcode, setSubmittedZipcode] = useState('');
   const [data, setData] = useState<any>(null);
+  const[fdata, setFdata] = useState<any>(null);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-
+  
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     fetchData();
+    fetchfData();
     fetchCoordinates();
   }, [submittedZipcode]);
   interface RentalDataObject {
@@ -30,6 +32,24 @@ interface OneRentToolProps {
     AverageRent: number;
     TotalRentals: number;
   }
+  const fetchfData = async () => {
+    if (!submittedZipcode) {
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:3030/mortgage_r/${submittedZipcode}`);
+      const result = await response.json();
+
+      setFdata(result);
+      setError(false);
+      setErrorMessage('');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError(true);
+      setErrorMessage('Error fetching data. Please try again.');
+    }
+  };
+
   const fetchCoordinates = async () => {
     if (!submittedZipcode) {
       return;
@@ -63,8 +83,32 @@ interface OneRentToolProps {
       setErrorMessage('Error fetching data. Please try again.');
     }
   };
-
-  const renderCharts = (data: any) => {
+  const parseMortgageData = (fdata: any) => {
+    // Define the MortgageDataObject interface within the function
+    interface MortgageDataObject {
+      Type: string;
+      rate: number;
+    }
+  
+    if (!fdata) {
+      return null;
+    }
+  
+    const mortgageArray: MortgageDataObject[] = []; // Update the type here
+  
+    Object.entries(fdata.rates).forEach(([key, value]) => {
+      if (key !== 'meta') { // Add this condition to filter out the 'meta' field
+        mortgageArray.push({
+          Type: key,
+          rate: Number(value),
+        });
+      }
+    });
+  
+    return mortgageArray;
+  };
+  
+  const parseRentData = (data: any) => {
     if (!data) {
       return null;
     }
@@ -109,8 +153,21 @@ interface OneRentToolProps {
     return rentalData;
   };
       
-  const chartData = useMemo(() => renderCharts(data), [data]);
-
+  const chartData = useMemo(() => parseRentData(data), [data]);
+  const mortgageData = useMemo(() => parseMortgageData(fdata), [fdata]);
+  const columns = [
+    {
+      name: 'Type',
+      selector: (row: any) => row.Type,
+      sortable: false,
+    },
+    {
+      name: 'Rate',
+      selector: (row: any) => row.rate,
+      sortable: false,
+    },
+  ];
+  
   const handleZipcodeSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!zipcode) {
@@ -158,6 +215,19 @@ interface OneRentToolProps {
             Submit
           </button>
         </form>
+        {mortgageData && (
+      <>
+
+ 
+        <DataTable
+          title="Mortgage Data"
+          columns={columns}
+          data={mortgageData}
+          highlightOnHover
+          responsive
+            />
+          </>
+        )}
         {error && <p className="error">{errorMessage}</p>}
         {coordinates && (
             <MapContainer

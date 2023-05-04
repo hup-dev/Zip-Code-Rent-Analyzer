@@ -19,6 +19,25 @@ async function getZipcodeCoordinates(zipcode) {
   const coordinates = data[0]?.lat && data[0]?.lon ? { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) } : null;
   return coordinates
 }
+async function getMortgageRates(zipcode) {
+  const options = {
+    method: 'GET',
+    url: 'https://realty-in-us.p.rapidapi.com/finance/rates',
+    params: {loc: zipcode},
+    headers: {
+      'X-RapidAPI-Key': process.env.REACT_APP_REALTY_MOLE_API_KEY,
+      'X-RapidAPI-Host': 'realty-in-us.p.rapidapi.com'
+    }
+  };
+  try {
+    const response = await axios.request(options);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 
 const db = new sqlite3.Database("market_data.db", (err) => {
   if (err) {
@@ -36,6 +55,12 @@ const db = new sqlite3.Database("market_data.db", (err) => {
         console.error(err.message);
       }
       console.log("Connected to coordinates table.");
+    });
+    db.run("CREATE TABLE mortgage_data (zipcode TEXT PRIMARY KEY, data TEXT)", (err) => {
+      if (err) {
+        console.error(err.message);
+      }
+      console.log("Connected to mortgage_data table.");
     });
   });
 });
@@ -109,7 +134,35 @@ app.get("/coordinates/:zipcode", async (req, res) => {
     }
       });
 });
+app.get("/mortgage_r/:zipcode", async (req, res) => {
+  const zipcode = req.params.zipcode;
+  
+  db.get("SELECT data FROM mortgage_data WHERE zipcode = ?", [zipcode], async (err, row) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send("Error retrieving data.");
+    }
 
+    if (row) {
+      res.json(JSON.parse(row.data));
+    } else {
+      try {
+        const mortgage_data = await getMortgageRates(zipcode);
+
+        db.run("INSERT INTO mortgage_data (zipcode, data) VALUES (?, ?)", [zipcode, JSON.stringify(mortgage_data)], (err) => {
+          if (err) {
+            console.error(err.message);
+          }
+          // Send the response back to the client after inserting the data into the database
+          res.json(mortgage_data);
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching data from the coordinates API.");
+      }
+    }
+      });
+});
 
 app.listen  (PORT, () => {
   console.log(`Server listening on port ${PORT}`);
