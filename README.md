@@ -43,7 +43,6 @@ NOTE: If you do not have the API Key for this project, use zipcodes in the marke
 
 
 I plan on adding some more features such as:
-* Valid zipcodes with no rent data currently crash the app
-* Possibly support for a new API with more data
+* I am looking to switch to an API with better data down the line
 * Some customization on the user interface to select what they want
 * Analysis and scoring of the zipcode rents to show growth, a buy rating, etc.
