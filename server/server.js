@@ -45,7 +45,7 @@ const db = new sqlite3.Database("market_data.db", (err) => {
   }
   console.log("Connected to the in-memory SQLite database.");
 
-  db.run("CREATE TABLE market_data (zipcode TEXT PRIMARY KEY, data TEXT)", (err) => {
+  db.run("CREATE TABLE market_data (zipcode TEXT PRIMARY KEY, data TEXT,last_updated DATE)", (err) => {
     if (err) {
       console.error(err.message);
     }
@@ -67,16 +67,21 @@ const db = new sqlite3.Database("market_data.db", (err) => {
 
 app.get("/market-data/:zipcode", (req, res) => {
   const zipcode = req.params.zipcode;
+  const currentDate = new Date();
+  const currentMonth = `${currentDate.getFullYear()}-${('0' + (currentDate.getMonth() + 1)).slice(-2)}`; // Format: YYYY-MM
 
-  db.get("SELECT data FROM market_data WHERE zipcode = ?", [zipcode], (err, row) => {
+  db.get("SELECT data, strftime('%Y-%m', last_updated) as last_updated_month FROM market_data WHERE zipcode = ?", [zipcode], (err, row) => {
     if (err) {
       console.error(err.message);
       res.status(500).send("Error retrieving data.");
+      return;
     }
 
-    if (row) {
+    if (row && row.last_updated_month === currentMonth) {
+      // Data for the current month exists, send it back
       res.json(JSON.parse(row.data));
     } else {
+      // Fetch new data from the API
       const options = {
         method: "GET",
         url: `https://realty-mole-property-api.p.rapidapi.com/zipCodes/${zipcode}`,
@@ -86,19 +91,22 @@ app.get("/market-data/:zipcode", (req, res) => {
         },
       };
  
-      axios
-        .request(options)
-        .then((response) => {
+      axios.request(options).then((response) => {
           const data = response.data;
           res.json(data);
 
-          db.run("INSERT INTO market_data (zipcode, data) VALUES (?, ?)", [zipcode, JSON.stringify(data)], (err) => {
-            if (err) {
-              console.error(err.message);
-            }
+        if (row) {
+          // Update existing entry with new data
+          db.run("UPDATE market_data SET data = ?, last_updated = CURRENT_TIMESTAMP WHERE zipcode = ?", [JSON.stringify(data), zipcode], (err) => {
+            if (err) console.error(err.message);
           });
-        })
-        .catch((error) => {
+        } else {
+          // Insert new entry
+          db.run("INSERT INTO market_data (zipcode, data, last_updated) VALUES (?, ?, CURRENT_TIMESTAMP)", [zipcode, JSON.stringify(data)], (err) => {
+            if (err) console.error(err.message);
+          });
+        }
+      }).catch((error) => {
           console.error(error);
           res.status(500).send("Error fetching data from the Realty Mole API.");
         });
