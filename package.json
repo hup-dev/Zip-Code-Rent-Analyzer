@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && cd server && npm install",
-    "start": "node server/server.js",
+    "start": "node server/server.js" ,
     "preview": "vite preview"
   },
   "dependencies": {
