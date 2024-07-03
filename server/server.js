@@ -1,4 +1,3 @@
-// server/server.js
 import * as dotenv from 'dotenv';
 dotenv.config({ path: "./.env" });
 import express from 'express';
@@ -8,7 +7,7 @@ import sqlite3 from 'sqlite3';
 sqlite3.verbose();
 
 const app = express();
-const PORT =  3030;
+const PORT = process.env.PORT || 3030;
 
 app.use(cors());
 
@@ -17,13 +16,14 @@ async function getZipcodeCoordinates(zipcode) {
   const response = await axios.get(url);
   const data = response.data;
   const coordinates = data[0]?.lat && data[0]?.lon ? { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) } : null;
-  return coordinates
+  return coordinates;
 }
+
 async function getMortgageRates(zipcode) {
   const options = {
     method: 'GET',
     url: 'https://realty-in-us.p.rapidapi.com/finance/rates',
-    params: {loc: zipcode},
+    params: { loc: zipcode },
     headers: {
       'X-RapidAPI-Key': process.env.REACT_APP_REALTY_MOLE_API_KEY,
       'X-RapidAPI-Host': 'realty-in-us.p.rapidapi.com'
@@ -36,8 +36,6 @@ async function getMortgageRates(zipcode) {
     console.error(error);
   }
 }
-
-
 
 const db = new sqlite3.Database("market_data.db", (err) => {
   if (err) {
@@ -85,7 +83,7 @@ app.get("/market-data/:zipcode", (req, res) => {
           "X-RapidAPI-Host": "realty-mole-property-api.p.rapidapi.com",
         },
       };
- 
+
       axios
         .request(options)
         .then((response) => {
@@ -105,9 +103,10 @@ app.get("/market-data/:zipcode", (req, res) => {
     }
   });
 });
+
 app.get("/coordinates/:zipcode", async (req, res) => {
   const zipcode = req.params.zipcode;
-  
+
   db.get("SELECT data FROM coordinates WHERE zipcode = ?", [zipcode], async (err, row) => {
     if (err) {
       console.error(err.message);
@@ -132,11 +131,12 @@ app.get("/coordinates/:zipcode", async (req, res) => {
         res.status(500).send("Error fetching data from the coordinates API.");
       }
     }
-      });
+  });
 });
+
 app.get("/mortgage_r/:zipcode", async (req, res) => {
   const zipcode = req.params.zipcode;
-  
+
   db.get("SELECT data FROM mortgage_data WHERE zipcode = ?", [zipcode], async (err, row) => {
     if (err) {
       console.error(err.message);
@@ -161,9 +161,7 @@ app.get("/mortgage_r/:zipcode", async (req, res) => {
         res.status(500).send("Error fetching data from the coordinates API.");
       }
     }
-      });
+  });
 });
 
-app.listen  (PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-} );
+module.exports = app;
